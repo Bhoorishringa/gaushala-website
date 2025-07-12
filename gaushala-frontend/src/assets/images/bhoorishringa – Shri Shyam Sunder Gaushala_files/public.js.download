@@ -1,0 +1,281 @@
+(function ($) {
+    "use strict";
+
+    $(function () {
+        
+        // SLIDER 1
+
+        if ($("#slider_1").length) {
+
+            $("#slider_1").owlCarousel({
+                items: 1,
+                loop: true,
+                autoplay: true,
+                autoplayTimeout: 5000,
+                autoplayHoverPause: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                        nav: false,
+                        loop: true
+                    },
+                    600: {
+                        items: 1,
+                        nav: false,
+                        loop: true
+                    },
+                    1000: {
+                        items: 1,
+                        nav: true,
+                        loop: true
+                    }
+                },
+                nav: false,
+                dots: false,
+                navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+            });
+
+        }
+        
+        // SLIDER 2
+
+        if ($("#slider_2").length) {
+
+            $("#slider_2").owlCarousel({
+                items: 1,
+                loop: true,
+                autoplay: true,
+                autoplayTimeout: 5000,
+                autoplayHoverPause: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                        nav: false,
+                        loop: true
+                    },
+                    600: {
+                        items: 1,
+                        nav: false,
+                        loop: true
+                    },
+                    1000: {
+                        items: 1,
+                        nav: false,
+                        loop: true,
+                        pagination: true,
+                        paginationNumbers: false
+                    }
+                },
+                nav: false,
+                navText: ["<i class='logo-nav-icon'></i>", "<i class='logo-nav-icon'></i>"]
+            });
+        }
+        
+        
+        // Highlights Block.
+        
+        if ($(".highlights_block").length)  {
+            
+            
+            $('.highlights_block').each(function(){
+                var $this = $(this);
+                
+//                console.log(" "+$this.find('.col_wiz').length);
+                // Add Row.
+                
+            })
+            
+            
+        }
+        
+        
+        // Counter Block.
+        
+        if( $('.wiz_counter').length > 0 ) {
+            
+            $('.wiz_counter').each(function(){
+                
+                var $wiz_counter_id = $(this).find('.counter');
+                
+                $wiz_counter_id.counterUp();
+                
+            });
+            
+            
+        }
+
+        // Logo Block.
+
+
+        if( $('.wiz_logos').length > 0 ) {
+            
+            $('.wiz_logos').each(function(){
+            
+                var $wiz_logo_id = $("#"+$(this).attr('id'));
+                
+                $wiz_logo_id.owlCarousel({
+                    items: 5,
+                    loop: true,
+                    autoplay: true,
+                    autoplayTimeout: 4000,
+                    autoplayHoverPause: true,
+                    responsive: {
+                        0: {
+                            items: 1,
+                            nav: true
+                        },
+                        600: {
+                            items: 3,
+                            nav: false
+                        },
+                        1000: {
+                            items: 5,
+                            nav: true,
+                            loop: true
+                        }
+                    },
+                    nav: true,
+                    navText: ["<i class='logo-nav-icon'></i>", "<i class='logo-nav-icon'></i>"]
+                });
+                
+                
+            });
+            
+        }
+   
+        // Gallery
+   
+        /*  
+        if( $('.no-padding-gallery').length > 0 ) {
+            
+            var $no_padding_gallery =  $('.no-padding-gallery');
+            var $total_item = $no_padding_gallery.find('.gallery-container').length; 
+            
+            
+            $( ".gallery-container:nth-child(3)" ).attr( "class", "col-md-6 col-sm-12 gallery-container" );
+            $( ".gallery-container:nth-child(4)" ).attr( "class", "col-md-6 col-sm-12 gallery-container" );
+            
+            $( ".gallery-container:nth-child(3)" ).after('</div><div class="row no-padding-gallery">');
+            
+        }
+		*/
+        
+        // GALLERY.
+
+        if ($('.gallery-light-box').length) {
+
+            $('.gallery-light-box').venobox();
+
+        }
+
+        // TESTIMONIAL CAROUSEL.
+
+        if ($(".testimonial-container ").length ) {
+
+               $(".testimonial-container ").owlCarousel({
+                   items: 1,
+                   loop: true,
+                   autoplay: true,
+                   autoplayTimeout: 4000,
+                   autoplayHoverPause: true,
+                   responsive: {
+                       0: {
+                           items: 1,
+                           nav: false
+                       },
+                       600: {
+                           items: 1,
+                           nav: false
+                       },
+                       1000: {
+                           items: 1,
+                           nav: false,
+                           loop: true,
+                           pagination : true,
+                           paginationNumbers: false
+                       }
+                   },
+                   nav: false,
+                   navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+               });
+           }
+           
+           // Back to top.
+           
+           // BACK TO TOP BUTTON.
+
+        if ($('#backTop').length === 1) {
+
+            $('#backTop').backTop({
+                'theme': 'custom'
+            });
+
+        }
+        
+         // PRELOADER
+
+        $(window).load(function () {
+
+            $("#preloader").fadeOut(500);
+
+        });
+        
+        return '';
+        //Counter.
+        
+        if ($(".counter-block-2").length > 0) {
+            
+            $(".counter-block-2").each(function(){
+                
+                var $counter_block = $(this).find('.counter');
+                
+                $counter_block.counterUp();
+//                $counter_block.counterUp({
+//                    delay: $delay,
+//                    time: $time
+//                });
+                
+            })
+            
+        }
+        
+        
+        // Testimonial.
+        
+        // Testimonial CONTAINER 2
+
+        if ($(".testimonial-container-2").length > 0) {
+
+            $(".testimonial-container-2 ").owlCarousel({
+                items: 1,
+                loop: true,
+                autoplay: true,
+                autoplayTimeout: 40000,
+                autoplayHoverPause: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                        nav: true
+                    },
+                    600: {
+                        items: 1,
+                        nav: false
+                    },
+                    1000: {
+                        items: 1,
+                        nav: false,
+                        loop: true
+                    }
+                },
+                nav: false,
+                navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+            });
+        }
+        
+        
+        
+        
+
+    });
+
+}(jQuery));

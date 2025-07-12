@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
+
+body {
+  font-family: 'Merriweather', serif;
+}
+
+.donation-video-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.donation-form-overlay {
+  position: relative;
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); /* dark overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.donation-form-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.3);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.donation-form-card h1 {
+  color: #2b1b09;
+  margin-bottom: 10px;
+}
+
+.donation-form-card p {
+  font-size: 1rem;
+  margin-bottom: 25px;
+  color: #444;
+}
+
+.donation-form-card input,
+.donation-form-card textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Merriweather', serif;
+}
+
+.donation-form-card textarea {
+  min-height: 80px;
+}
+
+.donate-btn {
+  background-color: #8BC34A;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.donate-btn:hover {
+  background-color: #6fa22e;
+}

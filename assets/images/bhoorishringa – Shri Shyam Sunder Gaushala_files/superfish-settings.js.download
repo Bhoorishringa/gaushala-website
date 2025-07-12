@@ -1,0 +1,28 @@
+/* 
+ * Custom Superfish settings
+ */
+jQuery(document).ready(function($){
+    "use strict";
+    var breakpoint = 768;
+    var sf = $('.main-navigation ul.nav-menu');
+	
+    if($(document).width() >= breakpoint){
+        sf.superfish({
+            delay:       0,                           
+            animation:   {opacity:'show',height:'show'},  
+            speed:       'fast'                         
+        });
+    }
+	
+    $(window).resize(function(){
+        if($(document).width() >= breakpoint & !sf.hasClass('sf-js-enabled')){
+            sf.superfish({
+            delay:       0,                           
+            animation:   {opacity:'show',height:'show'},  
+            speed:       'fast'                        
+            });
+        } else if($(document).width() < breakpoint) {
+            sf.superfish('destroy');
+        }
+    });
+});

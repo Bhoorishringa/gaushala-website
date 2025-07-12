@@ -1,0 +1,13 @@
+/*!
+ * StickyHeader v1.0.0
+ */
+var $j = jQuery.noConflict();
+$j(window).scroll(function() {
+	"use strict";
+	if ($j(this).scrollTop() > 1){  
+		$j('.header-sticky').addClass("sticky-header");
+	}
+	else{
+		$j('.header-sticky').removeClass("sticky-header");
+	}
+});
