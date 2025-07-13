@@ -1,39 +1,37 @@
 import React, { useEffect } from "react";
 import "./JoinUsPage.css";
-import logo from "../assets/images/logo.png";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
+import logo from "../assets/images/logo.png"; // ✅ Adjust path as needed
+
 
 const JoinUsPage = () => {
-    useEffect(() => {
-        const navbar = document.querySelector('.navbar');
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('shrink');
-            } else {
-                navbar.classList.remove('shrink');
-            }
-        };
+  useEffect(() => {
+    const handleScroll = () => {
+      const navbar = document.querySelector(".navbar");
+      if (window.scrollY > 50) navbar?.classList.add("shrink");
+      else navbar?.classList.remove("shrink");
+    };
 
-        window.addEventListener('scroll', handleScroll);
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                entry.target.classList.toggle('in-view', entry.isIntersecting);
-            });
-        }, { threshold: 0.2 });
-
-        const footerSections = document.querySelectorAll('.footer-container > div');
-        footerSections.forEach((section) => {
-            observer.observe(section);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle("in-view", entry.isIntersecting);
         });
+      },
+      { threshold: 0.2 }
+    );
 
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+    const sections = document.querySelectorAll(".footer-container > div");
+    sections.forEach((section) => observer.observe(section));
 
-    return (
-        <>
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <>
             <header>
                 <nav className="navbar">
                     <div className="logo">
@@ -125,7 +123,7 @@ const JoinUsPage = () => {
                 </div>
             </footer>
         </>
-    );
+  );
 };
 
 export default JoinUsPage;

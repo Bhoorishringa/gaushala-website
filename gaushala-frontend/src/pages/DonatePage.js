@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./DonatePage.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { postData } from "../utils/auth";
+
 
 const DonatePage = () => {
   const [form, setForm] = useState({
@@ -36,16 +38,7 @@ const DonatePage = () => {
       return;
     }
 
-    const orderRes = await fetch("http://localhost:5000/api/donate/create-order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ amount: form.amount }),
-    });
-
-    const data = await orderRes.json();
-    console.log("🧾 Razorpay order response:", data);
+    const data = await postData("/api/donate/create-order", { amount: form.amount });
 
     if (!data.success || !data.order) {
       alert("❌ Failed to create Razorpay order");
@@ -54,9 +47,8 @@ const DonatePage = () => {
 
     const { order } = data;
 
-
     const options = {
-      key: "rzp_test_8HAgEFQfBxnAe4",
+      key: "rzp_test_8HAgEFQfBxnAe4", // ✅ replace with production key if needed
       amount: order.amount,
       currency: "INR",
       name: "Shyamsunder Gaushala",
@@ -64,25 +56,16 @@ const DonatePage = () => {
       order_id: order.id,
       handler: async function (response) {
         try {
-          const verifyRes = await fetch("http://localhost:5000/api/donate/verify-payment", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              name: form.name,
-              email: form.email,
-              mobile: form.mobile,
-              amount: form.amount,
-              message: form.message, // ✅ included here
-            }),
+          const verifyData = await postData("/api/donate/verify-payment", {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            name: form.name,
+            email: form.email,
+            mobile: form.mobile,
+            amount: form.amount,
+            message: form.message,
           });
-
-          const verifyData = await verifyRes.json();
-          console.log("✅ Payment verified:", verifyData);
 
           if (verifyData.success) {
             window.location.href = "/thank-you";
@@ -108,7 +91,7 @@ const DonatePage = () => {
 
   return (
     <>
-      <Navbar />
+           <Navbar />
       <div style={{ marginTop: "50px", padding: "20px" }}>
   {/* ... your login/register form content here ... */}
 </div>
@@ -140,7 +123,7 @@ const DonatePage = () => {
         </div>
       </div>
 
-      <Footer />
+      <Footer /> 
     </>
   );
 };

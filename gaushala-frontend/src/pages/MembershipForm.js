@@ -3,129 +3,100 @@ import "./MembershipForm.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
-const educationOptions = [
-  "High School", "Intermediate", "Graduate", "Post Graduate", "PhD", "Other"
-];
+import { postData } from "../utils/auth";
+import { BASE_URL } from "../utils/auth"; // ✅ Adjust path if needed
 
-const professionOptions = [
-  "Student", "Teacher", "Doctor", "Engineer", "Lawyer", "Businessman", "Politician", "Farmer", "Other"
-];
 
+
+const educationOptions = ["High School", "Intermediate", "Graduate", "Post Graduate", "PhD", "Other"];
+const professionOptions = ["Student", "Teacher", "Doctor", "Engineer", "Lawyer", "Businessman", "Politician", "Farmer", "Other"];
 const genders = ["Male", "Female", "Other"];
 const maritalStatusOptions = ["Single", "Married", "Divorced", "Widowed"];
 const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 
 const MembershipForm = () => {
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    fatherName: "",
-    motherName: "",
-    dob: "",
-    gender: "",
-    maritalStatus: "",
-    mobile: "",
-    mobileOTP: "",
-    email: "",
-    emailOTP: "",
-    bloodGroup: "",
-    education: "",
-    profession: "",
-    corrAddress: {
-      flat: "", line2: "", city: "", country: "", state: "", district: "", pin: ""
-    },
-    permAddress: {
-      flat: "", line2: "", city: "", country: "", state: "", district: "", pin: ""
-    },
-    ideology: "",
-    otherAffiliation: "",
-    contribution: "",
-    photo: null
+    firstName: "", lastName: "", fatherName: "", motherName: "", dob: "", gender: "", maritalStatus: "",
+    mobile: "", mobileOTP: "", email: "", emailOTP: "", bloodGroup: "", education: "", profession: "",
+    corrAddress: { flat: "", line2: "", city: "", country: "", state: "", district: "", pin: "" },
+    permAddress: { flat: "", line2: "", city: "", country: "", state: "", district: "", pin: "" },
+    ideology: "", otherAffiliation: "", contribution: "", photo: null
   });
 
   const [otpState, setOtpState] = useState({
     mobileSent: false, mobileVerified: false,
-    emailSent: false, emailVerified: false
+    emailSent: false, emailVerified: false,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddressChange = (type, e) => {
     const { name, value } = e.target;
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
       [type]: { ...prev[type], [name]: value }
     }));
   };
 
-const sendOTP = async (type) => {
-  const endpoint = type === "email"
-    ? "http://localhost:5000/api/members/send-email-otp"
-    : "http://localhost:5000/api/members/send-mobile-otp";
-
-  const payload = type === "email" ? { email: form.email } : { mobile: form.mobile };
-
-  try {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-    if (data.success) {
-      alert(`${type === "email" ? "Email" : "Mobile"} OTP Sent`);
-      setOtpState(prev => ({ ...prev, [`${type}Sent`]: true }));
-    } else {
-      alert("Failed to send OTP");
-    }
-  } catch (err) {
-    console.error("OTP Send Error:", err);
-    alert("Server error while sending OTP");
-  }
-};
-
-
-const verifyOTP = async (type) => {
-  const endpoint = type === "email"
-    ? "http://localhost:5000/api/members/verify-email-otp"
-    : "http://localhost:5000/api/members/verify-mobile-otp";
-
-  const payload = type === "email"
-    ? { email: form.email, otp: form.emailOTP }
-    : { mobile: form.mobile, otp: form.mobileOTP };
-
-  try {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-    if (data.success) {
-      alert(`${type === "email" ? "Email" : "Mobile"} Verified`);
-      setOtpState(prev => ({ ...prev, [`${type}Verified`]: true }));
-    } else {
-      alert("Invalid OTP");
-    }
-  } catch (err) {
-    console.error("OTP Verify Error:", err);
-    alert("Server error while verifying OTP");
-  }
-};
-
-
   const handleFileChange = (e) => {
     setForm({ ...form, photo: e.target.files[0] });
   };
 
+  const sendOTP = async (type) => {
+    const endpoint = `${BASE_URL}/api/members/send-${type}-otp`;
+    const payload = type === "email" ? { email: form.email } : { mobile: form.mobile };
+
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert(`${type.toUpperCase()} OTP Sent`);
+        setOtpState((prev) => ({ ...prev, [`${type}Sent`]: true }));
+      } else {
+        alert(data.message || "Failed to send OTP");
+      }
+    } catch (err) {
+      console.error("OTP Send Error:", err);
+      alert("Server error while sending OTP");
+    }
+  };
+
+  const verifyOTP = async (type) => {
+    const endpoint = `${BASE_URL}/api/members/verify-${type}-otp`;
+    const payload = type === "email"
+      ? { email: form.email, otp: form.emailOTP }
+      : { mobile: form.mobile, otp: form.mobileOTP };
+
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert(`${type.toUpperCase()} Verified`);
+        setOtpState((prev) => ({ ...prev, [`${type}Verified`]: true }));
+      } else {
+        alert(data.message || "Invalid OTP");
+      }
+    } catch (err) {
+      console.error("OTP Verify Error:", err);
+      alert("Server error while verifying OTP");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!otpState.mobileVerified || !otpState.emailVerified) {
       alert("Please verify both Email and Mobile OTPs");
       return;
@@ -134,20 +105,19 @@ const verifyOTP = async (type) => {
     try {
       const formData = new FormData();
 
-      // Simple fields
       Object.entries(form).forEach(([key, value]) => {
         if (key === "corrAddress" || key === "permAddress") {
-          Object.entries(value).forEach(([subKey, subVal]) => {
-            formData.append(`${key}[${subKey}]`, subVal);
+          Object.entries(value).forEach(([k, v]) => {
+            formData.append(`${key}[${k}]`, v);
           });
-        } else if (key === "photo") {
-          if (value) formData.append("photo", value);
+        } else if (key === "photo" && value) {
+          formData.append("photo", value);
         } else {
           formData.append(key, value);
         }
       });
 
-      const res = await fetch("http://localhost:5000/api/members/submit", {
+      const res = await fetch(`${BASE_URL}/api/members/submit`, {
         method: "POST",
         body: formData,
       });
@@ -155,6 +125,7 @@ const verifyOTP = async (type) => {
       const data = await res.json();
       if (data.success) {
         alert("✅ Form submitted successfully!");
+        window.location.href = "/thank-you";
       } else {
         console.error(data);
         alert("❌ Submission failed");
@@ -165,7 +136,6 @@ const verifyOTP = async (type) => {
     }
   };
 
-
   return (
     <>
       <Navbar />
@@ -173,54 +143,54 @@ const verifyOTP = async (type) => {
         <h2>Membership Form</h2>
         <form onSubmit={handleSubmit} className="membership-form">
           <div className="form-grid">
-            <label>First Name</label>
-            <input name="firstName" value={form.firstName} onChange={handleChange} required />
-
-            <label>Last Name</label>
-            <input name="lastName" value={form.lastName} onChange={handleChange} required />
-
-            <label>Father's Name</label>
-            <input name="fatherName" value={form.fatherName} onChange={handleChange} required />
-
-            <label>Mother's Name</label>
-            <input name="motherName" value={form.motherName} onChange={handleChange} required />
-
-            <label>Date of Birth</label>
-            <input type="date" name="dob" value={form.dob} onChange={handleChange} required />
+            {[
+              { label: "First Name", name: "firstName" },
+              { label: "Last Name", name: "lastName" },
+              { label: "Father's Name", name: "fatherName" },
+              { label: "Mother's Name", name: "motherName" },
+              { label: "Date of Birth", name: "dob", type: "date" },
+            ].map(({ label, name, type }) => (
+              <React.Fragment key={name}>
+                <label>{label}</label>
+                <input type={type || "text"} name={name} value={form[name]} onChange={handleChange} required />
+              </React.Fragment>
+            ))}
 
             <label>Gender</label>
             <select name="gender" value={form.gender} onChange={handleChange} required>
               <option value="">Select</option>
-              {genders.map(g => <option key={g} value={g}>{g}</option>)}
+              {genders.map((g) => <option key={g} value={g}>{g}</option>)}
             </select>
 
             <label>Marital Status</label>
             <select name="maritalStatus" value={form.maritalStatus} onChange={handleChange} required>
               <option value="">Select</option>
-              {maritalStatusOptions.map(m => <option key={m} value={m}>{m}</option>)}
+              {maritalStatusOptions.map((m) => <option key={m} value={m}>{m}</option>)}
             </select>
 
+            {/* MOBILE + OTP */}
             <label>Mobile Number</label>
             <div className="otp-row">
               <input name="mobile" value={form.mobile} onChange={handleChange} required disabled={otpState.mobileVerified} />
-              <button type="button" onClick={() => sendOTP('mobile')} disabled={otpState.mobileSent || otpState.mobileVerified}>Send OTP</button>
+              <button type="button" onClick={() => sendOTP("mobile")} disabled={otpState.mobileSent || otpState.mobileVerified}>Send OTP</button>
             </div>
             {otpState.mobileSent && !otpState.mobileVerified && (
               <div className="otp-row">
                 <input name="mobileOTP" placeholder="Enter OTP" value={form.mobileOTP} onChange={handleChange} />
-                <button type="button" onClick={() => verifyOTP('mobile')}>Verify</button>
+                <button type="button" onClick={() => verifyOTP("mobile")}>Verify</button>
               </div>
             )}
 
+            {/* EMAIL + OTP */}
             <label>Email</label>
             <div className="otp-row">
-              <input name="email" type="email" value={form.email} onChange={handleChange} required disabled={otpState.emailVerified} />
-              <button type="button" onClick={() => sendOTP('email')} disabled={otpState.emailSent || otpState.emailVerified}>Send OTP</button>
+              <input type="email" name="email" value={form.email} onChange={handleChange} required disabled={otpState.emailVerified} />
+              <button type="button" onClick={() => sendOTP("email")} disabled={otpState.emailSent || otpState.emailVerified}>Send OTP</button>
             </div>
             {otpState.emailSent && !otpState.emailVerified && (
               <div className="otp-row">
                 <input name="emailOTP" placeholder="Enter OTP" value={form.emailOTP} onChange={handleChange} />
-                <button type="button" onClick={() => verifyOTP('email')}>Verify</button>
+                <button type="button" onClick={() => verifyOTP("email")}>Verify</button>
               </div>
             )}
 
@@ -243,27 +213,22 @@ const verifyOTP = async (type) => {
             </select>
           </div>
 
-          <h3>Correspondence Address</h3>
-          <div className="form-grid">
-            {["flat", "line2", "city", "country", "state", "district", "pin"].map(field => (
-              <React.Fragment key={field}>
-                <label>{field.replace(/^\w/, c => c.toUpperCase()).replace("line2", "Address Line 2")}</label>
-                <input name={field} value={form.corrAddress[field]} onChange={(e) => handleAddressChange('corrAddress', e)} />
-              </React.Fragment>
-            ))}
-          </div>
+          {/* Address Fields */}
+          {["corrAddress", "permAddress"].map((addrKey) => (
+            <React.Fragment key={addrKey}>
+              <h3>{addrKey === "corrAddress" ? "Correspondence Address" : "Permanent Address"}</h3>
+              <div className="form-grid">
+                {["flat", "line2", "city", "country", "state", "district", "pin"].map((field) => (
+                  <React.Fragment key={field}>
+                    <label>{field === "line2" ? "Address Line 2" : field.charAt(0).toUpperCase() + field.slice(1)}</label>
+                    <input name={field} value={form[addrKey][field]} onChange={(e) => handleAddressChange(addrKey, e)} />
+                  </React.Fragment>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
 
-          <h3>Permanent Address</h3>
-          <div className="form-grid">
-            {["flat", "line2", "city", "country", "state", "district", "pin"].map(field => (
-              <React.Fragment key={field}>
-                <label>{field.replace(/^\w/, c => c.toUpperCase()).replace("line2", "Address Line 2")}</label>
-                <input name={field} value={form.permAddress[field]} onChange={(e) => handleAddressChange('permAddress', e)} />
-              </React.Fragment>
-            ))}
-          </div>
-          <h3 className="section-title">Other Details</h3>
-
+          {/* Other Textareas */}
           <label>Political Inclination and Ideology</label>
           <textarea name="ideology" value={form.ideology} onChange={handleChange} />
 
@@ -272,16 +237,15 @@ const verifyOTP = async (type) => {
 
           <label>How would you like to contribute?</label>
           <textarea name="contribution" value={form.contribution} onChange={handleChange} />
-          <h3 className="section-title">Select Your Photo</h3>
 
-          <label>Upload Photo</label>
+          {/* Photo Upload */}
+          <h3>Upload Your Photo</h3>
           <input type="file" accept="image/*" onChange={handleFileChange} />
 
           <button type="submit" className="btn join-btn">Submit</button>
         </form>
       </div>
       <Footer />
-
     </>
   );
 };

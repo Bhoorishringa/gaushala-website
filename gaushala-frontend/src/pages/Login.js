@@ -1,8 +1,12 @@
+// gaushala-frontend/src/pages/Login.js
+
 import React, { useState } from "react";
 import "./Auth.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
+import { postData } from "../utils/auth";
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,14 +21,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
+      const data = await postData("/api/auth/login", form); // 🔥 using helper
       if (data.success) {
         alert("✅ Login successful!");
         navigate("/dashboard");
@@ -41,8 +38,8 @@ const Login = () => {
     <>
       <Navbar />
       <div style={{ marginTop: "100px", padding: "20px" }}>
-  {/* ... your login/register form content here ... */}
-</div>
+        {/* ... your login/register form content here ... */}
+      </div>
       <div className="auth-container">
         <form className="auth-form" onSubmit={handleSubmit}>
           <h2>Donor Login</h2>
